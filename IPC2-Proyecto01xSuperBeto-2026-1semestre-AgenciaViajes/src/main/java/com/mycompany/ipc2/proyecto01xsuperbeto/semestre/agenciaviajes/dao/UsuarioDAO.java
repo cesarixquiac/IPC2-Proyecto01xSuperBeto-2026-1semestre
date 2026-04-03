@@ -37,4 +37,18 @@ public class UsuarioDAO {
             return false;
         }
     }
+    
+    public int obtenerIdPorUsername(String username) {
+        String sql = "SELECT id_usuario FROM usuario WHERE username = ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            try (java.sql.ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) return rs.getInt("id_usuario");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar usuario: " + e.getMessage());
+        }
+        return -1;
+    }
 }

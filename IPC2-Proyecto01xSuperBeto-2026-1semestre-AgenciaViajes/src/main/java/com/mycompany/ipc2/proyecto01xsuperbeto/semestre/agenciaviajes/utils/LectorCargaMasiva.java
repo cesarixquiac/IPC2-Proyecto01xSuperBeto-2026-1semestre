@@ -6,8 +6,10 @@ package com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.utils;
 
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.ClienteDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.DestinoDAO;
+import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.PagoDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.PaqueteDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.ProveedorDAO;
+import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.ReservacionDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.UsuarioDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.models.Cliente;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.models.Destino;
@@ -42,6 +44,8 @@ public class LectorCargaMasiva {
     private final ProveedorDAO proveedorDAO = new ProveedorDAO();
     private final PaqueteDAO paqueteDAO = new PaqueteDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
+    private final ReservacionDAO reservacionDAO = new ReservacionDAO();
+    private final PagoDAO pagoDAO = new PagoDAO();
 
     private final Pattern pUsuario = Pattern.compile(REGEX_USUARIO);
     private final Pattern pDestino = Pattern.compile(REGEX_DESTINO);
@@ -174,6 +178,120 @@ public class LectorCargaMasiva {
                         } else {
                             erroresEncontrados++;
                         }
+                    }
+                }else if (linea.startsWith("SERVICIO_PAQUETE")) {
+                    Matcher m = pServicio.matcher(linea);
+                    if (m.matches()) {
+                        String nombrePaquete = m.group(1);
+                        String nombreProveedor = m.group(2);
+                        String descripcion = m.group(3);
+                        double costo = Double.parseDouble(m.group(4));
+
+                    
+                        int idPaquete = paqueteDAO.obtenerIdPorNombre(nombrePaquete);
+                        int idProveedor = proveedorDAO.obtenerIdPorNombre(nombreProveedor);
+
+                        if (idPaquete != -1 && idProveedor != -1) {
+                            if (paqueteDAO.insertarServicioPaquete(idPaquete, idProveedor, descripcion, costo)) {
+                                System.out.println("Éxito: Servicio '" + descripcion + "' agregado al paquete '" + nombrePaquete + "'.");
+                                registrosProcesados++;
+                            } else {
+                                erroresEncontrados++;
+                                System.err.println("Error DB en línea " + numLinea + ": No se pudo guardar el servicio.");
+                            }
+                        } else {
+                            erroresEncontrados++;
+                            System.err.println("Error Lógico en línea " + numLinea + ": Paquete o Proveedor no existen.");
+                        }
+                    } else {
+                        erroresEncontrados++;
+                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                    }
+
+                } else if (linea.startsWith("RESERVACION")) {
+                    Matcher m = pReservacion.matcher(linea);
+                    if (m.matches()) {
+                        String nombrePaquete = m.group(1);
+                        String usernameAgente = m.group(2);
+                        String fechaViajeTXT = m.group(3); // dd/mm/yyyy
+                        String pasajerosDPIs = m.group(4);
+
+                        int idPaquete = paqueteDAO.obtenerIdPorNombre(nombrePaquete);
+                        int idAgente = usuarioDAO.obtenerIdPorUsername(usernameAgente);
+
+                        if (idPaquete != -1 && idAgente != -1) {
+                            // Convertir fecha 
+                            String[] partesFecha = fechaViajeTXT.split("/");
+                            String fechaMySQL = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+
+                            // Separar los DPIs 
+                            String[] listaDpis = pasajerosDPIs.split("\\|");
+                            int cantPasajeros = listaDpis.length;
+
+                            // Calcular el costo 
+                            double precioBase = paqueteDAO.obtenerPrecioVenta(idPaquete);
+                            double costoTotal = precioBase * cantPasajeros;
+
+                            // Insertar en BD
+                            int idReservaGenerado = reservacionDAO.crearReservacion(idPaquete, idAgente, fechaMySQL, cantPasajeros, costoTotal);
+                            
+                            if (idReservaGenerado != -1) {
+                                reservacionDAO.insertarPasajeros(idReservaGenerado, listaDpis);
+                                System.out.println("Éxito: Reservación de '" + nombrePaquete + "' guardada con " + cantPasajeros + " pasajero(s).");
+                                registrosProcesados++;
+                            } else {
+                                erroresEncontrados++;
+                                System.err.println("Error DB en línea " + numLinea + ": Fallo al crear la reservación.");
+                            }
+                        } else {
+                            erroresEncontrados++;
+                            System.err.println("Error Lógico en línea " + numLinea + ": El paquete '" + nombrePaquete + "' o el usuario '" + usernameAgente + "' no existen.");
+                        }
+                    } else {
+                        erroresEncontrados++;
+                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                    }
+
+                }else if (linea.startsWith("PAGO")) {
+                    Matcher m = pPago.matcher(linea);
+                    if (m.matches()) {
+                        String idReservaTXT = m.group(1); // ej. RES-00001
+                        double monto = Double.parseDouble(m.group(2));
+                        int metodo = Integer.parseInt(m.group(3));
+                        String fechaTXT = m.group(4);
+
+                        // Convertir fecha de dd/MM/yyyy a yyyy-MM-dd
+                        String[] partesFecha = fechaTXT.split("/");
+                        String fechaMySQL = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+
+                        // Obtener datos para validar costo vs pago
+                        double[] datosReserva = pagoDAO.obtenerDatosReservaPorCodigo(idReservaTXT);
+
+                        if (datosReserva != null) {
+                            int idReservacion = (int) datosReserva[0];
+                            double costoTotal = datosReserva[1];
+
+                            if (pagoDAO.registrarPago(idReservacion, monto, metodo, fechaMySQL)) {
+                                System.out.println("Éxito: Pago de Q" + monto + " registrado a la reserva " + idReservaTXT + ".");
+                                registrosProcesados++;
+
+                                // Lógica de negocio: Verificar si ya pagó todo para confirmar
+                                double totalPagado = pagoDAO.obtenerTotalPagado(idReservacion);
+                                if (totalPagado >= costoTotal) {
+                                    pagoDAO.actualizarEstadoReserva(idReservacion, "Confirmada");
+                                    System.out.println("-> ¡La reservación " + idReservaTXT + " ha sido Confirmada!");
+                                }
+                            } else {
+                                erroresEncontrados++;
+                                System.err.println("Error DB en línea " + numLinea + ": Fallo al registrar el pago.");
+                            }
+                        } else {
+                            erroresEncontrados++;
+                            System.err.println("Error Lógico en línea " + numLinea + ": La reservación '" + idReservaTXT + "' no existe.");
+                        }
+                    } else {
+                        erroresEncontrados++;
+                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
                 }
 

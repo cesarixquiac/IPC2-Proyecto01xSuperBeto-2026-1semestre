@@ -1,6 +1,1 @@
-USUARIO("mlopez","Segura123",1)
-USUARIO("admin_jefe","SuperPass",3)
-DESTINO("Peten", "Guatemala", "Cuna de la civilizacion Maya, hogar de Tikal")
-PROVEEDOR("Avianca", 1, "Colombia")
-PAQUETE("Expedicion Maya 3 dias", "Peten", 3, 3500.00, 15)
-CLIENTE("2345678901011", "Juan Perez", "20/05/1985", "44445555", "juanp@mail.com", "Guatemalteca")
+PAGO("RES-00001", 7000.00, 1, "20/08/2026")

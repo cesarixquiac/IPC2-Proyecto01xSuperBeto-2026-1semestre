@@ -30,4 +30,23 @@ public class ProveedorDAO {
             return false;
         }
     }
+    
+    public int obtenerIdPorNombre(String nombre) {
+        String sql = "SELECT id_proveedor FROM proveedor WHERE nombre = ?";
+        
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, nombre);
+         
+            try (java.sql.ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_proveedor"); 
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar ID del proveedor '" + nombre + "': " + e.getMessage());
+        }
+        return -1; // Retorna -1 si no existe
+    }
 }
