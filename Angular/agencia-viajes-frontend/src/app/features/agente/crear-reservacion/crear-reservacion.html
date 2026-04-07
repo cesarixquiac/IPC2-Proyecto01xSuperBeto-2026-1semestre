@@ -1,0 +1,100 @@
+<div class="agente-container">
+  
+  <div class="header-actions">
+    <div class="header-titles">
+      <h2>🌴 Nueva Reservación</h2>
+      <p>Configure el viaje para el cliente con DPI: <strong>{{ dpiTitular }}</strong></p>
+    </div>
+    <button routerLink="/agente" class="btn-back">⬅️ Cancelar y Volver</button>
+  </div>
+
+  <div class="main-grid">
+    
+    <div class="left-column">
+      
+      <div class="form-card">
+        <h3>1. Selección de Destino</h3>
+        
+        <div class="form-group full-width">
+          <label>Paquete Turístico</label>
+          <select [(ngModel)]="reservacion.id_paquete" (change)="actualizarCalculos()" class="form-control select-highlight">
+            <option [ngValue]="null">-- Seleccione un Paquete Disponible --</option>
+            <option *ngFor="let p of paquetes" [ngValue]="p.id_paquete">
+              {{ p.nombre }} (Q{{ p.precio_venta }} p/p) - Máx. {{ p.capacidad_max }} pax
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Fecha de Viaje</label>
+          <input type="date" [(ngModel)]="reservacion.fecha_viaje" class="form-control">
+        </div>
+
+        <div class="form-group full-width">
+          <label>Cantidad de Pasajeros Totales</label>
+          <input type="number" [(ngModel)]="reservacion.cantidad_pasajeros" (change)="actualizarCalculos()" (keyup)="actualizarCalculos()" class="form-control text-center" min="1">
+          <small class="help-text">El sistema calculará el total y pedirá los DPIs correspondientes.</small>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3>2. Registro de Pasajeros</h3>
+        <p class="help-text">El titular de la reserva siempre es el Pasajero 1.</p>
+
+        <div class="passenger-list">
+          <div class="passenger-row" *ngFor="let pas of reservacion.pasajeros; let i = index; trackBy: trackByIndex">
+            <div class="passenger-number">{{ i + 1 }}</div>
+            <div class="form-group full-width">
+              <label *ngIf="i === 0">DPI del Titular (Responsable)</label>
+              <label *ngIf="i > 0">DPI del Pasajero {{ i + 1 }}</label>
+              
+              <input type="text" 
+                     [(ngModel)]="reservacion.pasajeros[i]" 
+                     [disabled]="i === 0"
+                     [ngClass]="{'input-disabled': i === 0}"
+                     class="form-control" 
+                     placeholder="Ingrese DPI de 13 dígitos">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="right-column">
+      
+      <div class="summary-card">
+        <h3>Resumen de Cobro</h3>
+        
+        <div class="summary-details">
+          <div class="summary-row">
+            <span>Subtotal (Precio Unitario):</span>
+            <span *ngIf="reservacion.id_paquete">
+              Q{{ (reservacion.costo_total / reservacion.cantidad_pasajeros) | number:'1.2-2' }}
+            </span>
+            <span *ngIf="!reservacion.id_paquete">Q0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Cantidad de Pasajeros:</span>
+            <span>x {{ reservacion.cantidad_pasajeros }}</span>
+          </div>
+        </div>
+
+        <div class="total-box">
+          <span class="total-label">Costo Total:</span>
+          <span class="total-amount">Q{{ reservacion.costo_total | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="status-badge">Estado Inicial: <strong>Pendiente de Pago</strong></div>
+
+        <button class="btn-confirm" (click)="confirmarReservacion()" [disabled]="!reservacion.id_paquete">
+           Confirmar Reservación
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

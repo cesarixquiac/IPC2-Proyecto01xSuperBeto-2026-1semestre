@@ -1,0 +1,15 @@
+<div class="upload-container">
+  <h2>Carga Masiva de Datos</h2>
+  <p>Seleccione el archivo .txt con las instrucciones del sistema.</p>
+  
+  <input type="file" (change)="onFileSelected($event)" accept=".txt">
+  <button [disabled]="!selectedFile" (click)="subirArchivo()">Procesar Archivo</button>
+
+  <div *ngIf="resumen" class="results">
+    <h3>Resultados del Procesamiento</h3>
+    <ul>
+      <li *ngFor="let err of resumen.errores" class="text-danger">{{ err }}</li>
+    </ul>
+    <p>Registros exitosos: {{ resumen.exitos }}</p>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+.admin-container { padding: 20px; max-width: 1000px; margin: 0 auto; }
+
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header-titles h2 { margin: 0; color: #2c3e50; }
+.header-titles p { margin: 5px 0 0 0; color: #7f8c8d; }
+
+.btn-back { background-color: #95a5a6; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-back:hover { background-color: #7f8c8d; }
+
+.form-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.form-card h3 { margin-top: 0; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; color: #34495e; }
+
+/* Grid para los datos generales */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #333; }
+.form-control { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+.form-control:focus { border-color: #3498db; outline: none; }
+
+/* Sección de Servicios Dinámicos */
+.services-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.btn-add-service { background-color: #3498db; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+.btn-add-service:hover { background-color: #2980b9; }
+
+.service-row { display: flex; gap: 15px; align-items: flex-end; background-color: #f9f9f9; padding: 15px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid #3498db; }
+.service-number { font-weight: bold; color: #7f8c8d; font-size: 18px; padding-bottom: 10px; }
+
+.form-group-action { display: flex; align-items: flex-end; padding-bottom: 2px; }
+.btn-delete-service { background-color: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; padding: 10px; font-size: 14px; transition: 0.3s; }
+.btn-delete-service:hover { background-color: #c0392b; }
+
+.empty-services { text-align: center; padding: 20px; color: #7f8c8d; font-style: italic; background-color: #f9f9f9; border-radius: 6px; }
+
+/* Botón Final */
+.footer-actions { text-align: right; margin-top: 20px; margin-bottom: 40px; }
+.btn-save-package { background-color: #27ae60; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(39, 174, 96, 0.3); transition: 0.3s; }
+.btn-save-package:hover { background-color: #219150; transform: translateY(-2px); }

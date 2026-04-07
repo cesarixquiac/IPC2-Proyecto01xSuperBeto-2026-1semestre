@@ -1,0 +1,90 @@
+<div class="agente-container no-print">
+  
+  <div class="header-actions">
+    <h2>💰 Caja Registradora</h2>
+    <button routerLink="/agente" class="btn-back">⬅️ Volver a Clientes</button>
+  </div>
+
+  <div class="search-card">
+    <label>Buscar Código de Reservación:</label>
+    <div class="search-bar">
+      <input type="text" [(ngModel)]="codigoBuscado" placeholder="Ej. RES-00001" (keyup.enter)="buscarReserva()" class="form-control" style="text-transform: uppercase;">
+      <button class="btn-search" (click)="buscarReserva()">Buscar Deuda</button>
+    </div>
+    <div *ngIf="errorBusqueda" class="error-text">No se encontró ninguna reservación con ese código.</div>
+  </div>
+
+  <div class="main-grid" *ngIf="reservaActual">
+    
+    <div class="debt-card">
+      <h3>Estado de Cuenta</h3>
+      <div class="debt-row"><span>Costo Total del Viaje:</span> <strong>Q{{ reservaActual.costo_total | number:'1.2-2' }}</strong></div>
+      <div class="debt-row"><span>Total Abonado a la Fecha:</span> <strong style="color: #27ae60;">Q{{ reservaActual.total_pagado | number:'1.2-2' }}</strong></div>
+      <div class="debt-row highlight-debt"><span>SALDO PENDIENTE:</span> <strong>Q{{ reservaActual.saldo_pendiente | number:'1.2-2' }}</strong></div>
+      
+      <div *ngIf="reservaActual.saldo_pendiente === 0" class="success-badge" style="margin-top: 15px; text-align: center;">
+        Esta reservación está pagada en su totalidad (Confirmada).
+      </div>
+    </div>
+
+    <div class="payment-card" *ngIf="reservaActual.saldo_pendiente > 0">
+      <h3>Registrar Nuevo Pago</h3>
+      
+      <div class="form-group">
+        <label>Monto a Pagar (Q)</label>
+        <input type="number" [(ngModel)]="nuevoPago.monto" class="form-control total-input" min="1" [max]="reservaActual.saldo_pendiente">
+      </div>
+
+      <div class="form-group">
+        <label>Método de Pago</label>
+        <select [(ngModel)]="nuevoPago.metodo_pago" class="form-control">
+          <option [value]="1"> Efectivo</option>
+          <option [value]="2"> Tarjeta de Crédito/Débito</option>
+          <option [value]="3"> Transferencia Bancaria</option>
+        </select>
+      </div>
+
+      <button class="btn-pay" (click)="procesarPago()">💲 Procesar Cobro</button>
+    </div>
+
+    <div class="payment-card" *ngIf="reservaActual.saldo_pendiente === 0" style="display: flex; align-items: center; justify-content: center;">
+       <button class="btn-print" (click)="imprimirComprobante()"> Imprimir Comprobante</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-only receipt-container" *ngIf="mostrarRecibo">
+  <div class="receipt-header">
+    <h1>Agencia de Viajes SuperBeto</h1>
+    <h2>COMPROBANTE DE PAGO CONFIRMADO</h2>
+  </div>
+
+  <div class="receipt-details">
+    <p><strong>Código de Reservación:</strong> {{ codigoBuscado | uppercase }}</p>
+    <p><strong>Fecha de Pago:</strong> {{ nuevoPago.fecha_pago }}</p>
+    <p><strong>Estado de la Reserva:</strong> CONFIRMADA </p>
+  </div>
+
+  <table class="receipt-table">
+    <thead>
+      <tr>
+        <th>Concepto</th>
+        <th>Método de Pago</th>
+        <th>Monto Pagado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pago Total del Paquete Turístico</td>
+        <td>{{ obtenerNombreMetodo(nuevoPago.metodo_pago) }}</td>
+        <td>Q{{ reservaActual.costo_total | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="receipt-footer">
+    <p>¡Gracias por su preferencia y buen viaje!</p>
+    <p class="small-text">Este comprobante es válido por el 100% de la reservación.</p>
+  </div>
+</div>

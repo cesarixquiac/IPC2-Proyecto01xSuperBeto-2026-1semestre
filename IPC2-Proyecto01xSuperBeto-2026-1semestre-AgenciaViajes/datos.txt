@@ -1,1 +1,5 @@
-PAGO("RES-00001", 7000.00, 1, "20/08/2026")
+USUARIO("nuevo_admin","secreta123",3)
+USUARIO("agente_xela","viajes2026",1)
+DESTINO("Quetzaltenango", "Guatemala", "Cuna de la cultura y clima frio")
+PROVEEDOR("Transportes Galgos", 4, "Guatemala")
+INVENTO("Esto va", "a dar error")

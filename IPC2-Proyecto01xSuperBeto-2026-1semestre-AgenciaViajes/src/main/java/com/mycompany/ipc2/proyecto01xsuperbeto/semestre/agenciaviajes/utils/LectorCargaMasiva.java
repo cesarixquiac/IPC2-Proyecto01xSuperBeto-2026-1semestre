@@ -4,6 +4,8 @@
  */
 package com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.ClienteDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.DestinoDAO;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao.PagoDAO;
@@ -18,6 +20,8 @@ import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.models.Pro
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.models.Usuario;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,11 +60,12 @@ public class LectorCargaMasiva {
     private final Pattern pReservacion = Pattern.compile(REGEX_RESERVACION);
     private final Pattern pPago = Pattern.compile(REGEX_PAGO);
 
-    public void procesarArchivo(String rutaArchivo) {
+    public JsonObject procesarArchivoWeb(InputStream fileContent) {
         int registrosProcesados = 0;
         int erroresEncontrados = 0;
+        JsonArray arrayErrores = new JsonArray(); 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(fileContent))) {
             String linea;
             int numLinea = 0;
 
@@ -78,19 +83,19 @@ public class LectorCargaMasiva {
                         String username = m.group(1);
                         String password = m.group(2);
                         int rol = Integer.parseInt(m.group(3));
+                        
                         Usuario nuevoUsuario = new Usuario(username, password, rol);
-                        boolean exito = usuarioDAO.insertarUsuario(nuevoUsuario);
+                        boolean exito = usuarioDAO.insertarUsuario(nuevoUsuario); 
+                        
                         if (exito) {
-                            System.out.println("Éxito: Usuario '" + username + "' guardado en la Base de Datos.");
                             registrosProcesados++;
                         } else {
-                            System.err.println("Error de Base de Datos en línea " + numLinea + ": No se pudo guardar el usuario '" + username + "' (Revisa si está duplicado).");
                             erroresEncontrados++;
+                            arrayErrores.add("Error DB en línea " + numLinea + ": No se pudo guardar el usuario '" + username + "' (¿Duplicado?).");
                         }
-
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato en línea " + numLinea + ": " + linea);
                     }
                 } else if (linea.startsWith("DESTINO")) {
                     Matcher m = pDestino.matcher(linea);
@@ -106,12 +111,12 @@ public class LectorCargaMasiva {
                             System.out.println("Éxito: Destino '" + nombre + "' guardado.");
                             registrosProcesados++;
                         } else {
-                            System.err.println("Error DB en línea " + numLinea + ": Destino '" + nombre + "' no guardado (¿Duplicado?).");
+                           arrayErrores.add("Error DB en línea " + numLinea + ": Destino '" + nombre + "' no guardado (¿Duplicado?).");
                             erroresEncontrados++;
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
 
                 } else if (linea.startsWith("PROVEEDOR")) {
@@ -128,12 +133,12 @@ public class LectorCargaMasiva {
                             System.out.println("Éxito: Proveedor '" + nombre + "' guardado.");
                             registrosProcesados++;
                         } else {
-                            System.err.println("Error DB en línea " + numLinea + ": Proveedor '" + nombre + "' no guardado (¿Duplicado?).");
+                            arrayErrores.add("Error DB en línea " + numLinea + ": Proveedor '" + nombre + "' no guardado (¿Duplicado?).");
                             erroresEncontrados++;
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
                 } else if (linea.startsWith("PAQUETE")) {
                     Matcher m = pPaquete.matcher(linea);
@@ -156,17 +161,17 @@ public class LectorCargaMasiva {
                                 System.out.println("Éxito: Paquete '" + nombrePaquete + "' guardado.");
                                 registrosProcesados++;
                             } else {
-                                System.err.println("Error DB en línea " + numLinea + ": No se guardó el paquete (¿Duplicado?).");
+                                arrayErrores.add("Error DB en línea " + numLinea + ": No se guardó el paquete (¿Duplicado?).");
                                 erroresEncontrados++;
                             }
                         } else {
                             // Error El archivo intento asignar un destino que no ha sido creado
-                            System.err.println("Error Lógico en línea " + numLinea + ": El destino '" + nombreDestino + "' no existe en la base de datos.");
+                            arrayErrores.add("Error Lógico en línea " + numLinea + ": El destino '" + nombreDestino + "' no existe en la base de datos.");
                             erroresEncontrados++;
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
                 } else if (linea.startsWith("CLIENTE")) {
                     Matcher m = pCliente.matcher(linea);
@@ -197,15 +202,15 @@ public class LectorCargaMasiva {
                                 registrosProcesados++;
                             } else {
                                 erroresEncontrados++;
-                                System.err.println("Error DB en línea " + numLinea + ": No se pudo guardar el servicio.");
+                                arrayErrores.add("Error DB en línea " + numLinea + ": No se pudo guardar el servicio.");
                             }
                         } else {
                             erroresEncontrados++;
-                            System.err.println("Error Lógico en línea " + numLinea + ": Paquete o Proveedor no existen.");
+                            arrayErrores.add("Error Lógico en línea " + numLinea + ": Paquete o Proveedor no existen.");
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
 
                 } else if (linea.startsWith("RESERVACION")) {
@@ -241,15 +246,15 @@ public class LectorCargaMasiva {
                                 registrosProcesados++;
                             } else {
                                 erroresEncontrados++;
-                                System.err.println("Error DB en línea " + numLinea + ": Fallo al crear la reservación.");
+                                arrayErrores.add("Error DB en línea " + numLinea + ": Fallo al crear la reservación.");
                             }
                         } else {
                             erroresEncontrados++;
-                            System.err.println("Error Lógico en línea " + numLinea + ": El paquete '" + nombrePaquete + "' o el usuario '" + usernameAgente + "' no existen.");
+                            arrayErrores.add("Error Lógico en línea " + numLinea + ": El paquete '" + nombrePaquete + "' o el usuario '" + usernameAgente + "' no existen.");
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
 
                 }else if (linea.startsWith("PAGO")) {
@@ -275,7 +280,7 @@ public class LectorCargaMasiva {
                                 System.out.println("Éxito: Pago de Q" + monto + " registrado a la reserva " + idReservaTXT + ".");
                                 registrosProcesados++;
 
-                                // Lógica de negocio: Verificar si ya pagó todo para confirmar
+                                // Verificar si ya pagó todo para confirmar
                                 double totalPagado = pagoDAO.obtenerTotalPagado(idReservacion);
                                 if (totalPagado >= costoTotal) {
                                     pagoDAO.actualizarEstadoReserva(idReservacion, "Confirmada");
@@ -283,15 +288,15 @@ public class LectorCargaMasiva {
                                 }
                             } else {
                                 erroresEncontrados++;
-                                System.err.println("Error DB en línea " + numLinea + ": Fallo al registrar el pago.");
+                                arrayErrores.add("Error DB en línea " + numLinea + ": Fallo al registrar el pago.");
                             }
                         } else {
                             erroresEncontrados++;
-                            System.err.println("Error Lógico en línea " + numLinea + ": La reservación '" + idReservaTXT + "' no existe.");
+                            arrayErrores.add("Error Lógico en línea " + numLinea + ": La reservación '" + idReservaTXT + "' no existe.");
                         }
                     } else {
                         erroresEncontrados++;
-                        System.err.println("Error de Formato Lógico en línea " + numLinea + ": " + linea);
+                        arrayErrores.add("Error de Formato Lógico en línea " + numLinea + ": " + linea);
                     }
                 }
 
@@ -305,5 +310,10 @@ public class LectorCargaMasiva {
             System.err.println("Error al leer el archivo: " + e.getMessage());
             e.printStackTrace();
         }
+       JsonObject respuesta = new JsonObject();
+        respuesta.addProperty("exitos", registrosProcesados);
+        respuesta.addProperty("cantidadErrores", erroresEncontrados);
+        respuesta.add("errores", arrayErrores);
+        return respuesta;
     }
 }

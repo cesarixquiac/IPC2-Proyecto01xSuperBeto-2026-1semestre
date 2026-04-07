@@ -52,4 +52,27 @@ public class DestinoDAO {
         }
         return -1; // Retornamos -1 si el destino no existe
     }
+    
+    public java.util.List<com.google.gson.JsonObject> listarDestinos() {
+        java.util.List<com.google.gson.JsonObject> lista = new java.util.ArrayList<>();
+        String sql = "SELECT id_destino, nombre, pais FROM Destino";
+        
+        try (java.sql.Connection conn = ConexionDB.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+                json.addProperty("id_destino", rs.getInt("id_destino"));
+                json.addProperty("nombre", rs.getString("nombre"));
+                json.addProperty("pais", rs.getString("pais"));
+                lista.add(json);
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error al listar destinos: " + e.getMessage());
+        }
+        return lista;
+    }
+    
+    
 }

@@ -1,0 +1,92 @@
+<div class="admin-container">
+  
+  <div class="header-actions">
+    <div class="header-titles">
+      <h2>📦 Crear Nuevo Paquete Turístico</h2>
+      <p>Configure los detalles del paquete y agregue los servicios incluidos (vuelos, hoteles, etc.).</p>
+    </div>
+    <button routerLink="/admin" class="btn-back">⬅️ Volver al Panel</button>
+  </div>
+
+  <div class="form-card">
+    <h3>1. Datos Generales del Paquete</h3>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombre del Paquete</label>
+        <input type="text" [(ngModel)]="paquete.nombre" class="form-control" placeholder="Ej. Caribe Mágico 7 noches">
+      </div>
+
+      <div class="form-group">
+        <label>Destino Turístico</label>
+        <select [(ngModel)]="paquete.id_destino" class="form-control">
+          <option [ngValue]="null">-- Seleccione un Destino --</option>
+          <option *ngFor="let d of destinos" [ngValue]="d.id_destino">
+            {{ d.nombre }} ({{ d.pais }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Duración (Días)</label>
+        <input type="number" [(ngModel)]="paquete.duracion_dias" class="form-control" min="1">
+      </div>
+
+      <div class="form-group">
+        <label>Precio de Venta (Q)</label>
+        <input type="number" [(ngModel)]="paquete.precio_venta" class="form-control" min="0" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label>Capacidad Máxima (Personas)</label>
+        <input type="number" [(ngModel)]="paquete.capacidad_max" class="form-control" min="1">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="services-header">
+      <h3>2. Servicios Incluidos</h3>
+      <button class="btn-add-service" (click)="agregarServicio()">➕ Agregar Servicio</button>
+    </div>
+
+    <div class="service-row" *ngFor="let servicio of paquete.servicios; let i = index">
+      
+      <div class="service-number">{{ i + 1 }}</div>
+      
+      <div class="form-group" style="flex: 2;">
+        <label>Proveedor</label>
+        <select [(ngModel)]="servicio.id_proveedor" class="form-control">
+          <option [ngValue]="null">-- Seleccione --</option>
+          <option *ngFor="let p of proveedores" [ngValue]="p.id_proveedor">
+            {{ p.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" style="flex: 3;">
+        <label>Descripción del Servicio</label>
+        <input type="text" [(ngModel)]="servicio.descripcion" class="form-control" placeholder="Ej. Vuelo redondo GUA-CUN">
+      </div>
+
+      <div class="form-group" style="flex: 1;">
+        <label>Costo Agencia (Q)</label>
+        <input type="number" [(ngModel)]="servicio.costo_agencia" class="form-control" min="0">
+      </div>
+
+      <div class="form-group-action">
+        <button class="btn-delete-service" (click)="eliminarServicio(i)" title="Eliminar fila">🗑️</button>
+      </div>
+    </div>
+    
+    <div *ngIf="paquete.servicios.length === 0" class="empty-services">
+      Aún no ha agregado servicios a este paquete.
+    </div>
+
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn-save-package" (click)="guardarPaquete()">💾 Guardar Paquete Completo</button>
+  </div>
+
+</div>

@@ -73,4 +73,39 @@ public class ReservacionDAO {
             System.err.println("Error al insertar pasajeros: " + e.getMessage());
         }
     }
+    
+    public java.util.List<com.google.gson.JsonObject> obtenerHistorialPorDPI(String dpi) {
+        java.util.List<com.google.gson.JsonObject> historial = new java.util.ArrayList<>();
+        
+        String sql = "SELECT r.codigo_reserva, p.nombre AS paquete_nombre, r.fecha_viaje, r.costo_total, r.estado " +
+                     "FROM reservacion r " +
+                     "JOIN pasajero_reservacion pr ON r.id_reservacion = pr.id_reservacion " +
+                     "JOIN paquete p ON r.id_paquete = p.id_paquete " +
+                     "WHERE pr.dpi_cliente = ? " +
+                     "ORDER BY r.id_reservacion DESC";
+                     
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             
+            pstmt.setString(1, dpi);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+                    json.addProperty("codigo_reserva", rs.getString("codigo_reserva"));
+                    json.addProperty("paquete_nombre", rs.getString("paquete_nombre"));
+                    json.addProperty("fecha_viaje", rs.getString("fecha_viaje"));
+                    json.addProperty("costo_total", rs.getDouble("costo_total"));
+                    json.addProperty("estado", rs.getString("estado"));
+                    historial.add(json);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener historial del cliente: " + e.getMessage());
+        }
+        return historial;
+    }
+    
+    
+    
 }

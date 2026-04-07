@@ -1,0 +1,93 @@
+<div class="admin-container">
+  
+  <div class="header-actions">
+    <div class="header-titles">
+      <h2>Gestión de Usuarios</h2>
+      <p>Lista de usuarios registrados en el sistema.</p>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+      <button (click)="abrirModalNuevo()" class="btn-new" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+         Nuevo Usuario
+      </button>
+      
+      <button routerLink="/admin/gestion-paquetes" style="background-color: #f39c12; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+         Crear Paquete
+      </button>
+
+      <button routerLink="/admin/carga-masiva" class="btn-upload">
+         Carga Masiva de Datos
+      </button>
+
+      
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Rol</th>
+        <th>Estado</th> <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{ u.username }}</td>
+        <td>
+          <span class="badge" [ngClass]="{'admin': u.id_rol === 3, 'Atencion al cliente': u.id_rol === 1, 'operador': u.id_rol === 2}">
+            {{ u.id_rol === 3 ? 'Administrador' : (u.id_rol === 1 ? 'Atencion al cliente' : 'Operador') }}
+          </span>
+        </td>
+        <td>
+          <span [ngStyle]="{'color': u.estado === 'ACTIVO' ? 'green' : 'red', 'font-weight': 'bold'}">
+            {{ u.estado || 'ACTIVO' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn-edit" (click)="abrirModal(u)">✏️ Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> 
+
+<div class="modal-overlay" *ngIf="usuarioEditando">
+  <div class="modal-content">
+    <h3>{{ esNuevoUsuario ? 'Crear Nuevo Usuario' : 'Editar Usuario' }}</h3>
+    
+    <div class="form-group">
+      <label>Username</label>
+      <input [(ngModel)]="usuarioEditando.username" [disabled]="!esNuevoUsuario" class="form-control">
+    </div>
+
+    <div class="form-group" *ngIf="esNuevoUsuario">
+      <label>Password (mín. 6 caracteres)</label>
+      <input type="password" [(ngModel)]="usuarioEditando.password" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Rol del Sistema</label>
+      <select [(ngModel)]="usuarioEditando.id_rol" class="form-control">
+        <option [ngValue]="1">Atención al Cliente</option>
+        <option [ngValue]="2">Operaciones</option>
+        <option [ngValue]="3">Administrador</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Estado del Acceso</label>
+      <select [(ngModel)]="usuarioEditando.estado" class="form-control">
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Dado de Baja</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarModal()">❌ Cancelar</button>
+      <button class="btn-save" (click)="guardarCambios()">
+        💾 {{ esNuevoUsuario ? 'Registrar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

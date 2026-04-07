@@ -19,8 +19,8 @@ public class Main {
         LectorCargaMasiva lector = new LectorCargaMasiva();
         
        
-        lector.procesarArchivo("datos.txt");
-        
+//        lector.procesarArchivo("datos.txt");
+//        
         System.out.println("Prueba finalizada. Revisa tu base de datos MySQL.");
     }
 }

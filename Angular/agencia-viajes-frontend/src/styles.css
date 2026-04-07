@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Opcional, pero muy recomendado para que los bordes y paddings no desajusten tus tamaños */
+* {
+  box-sizing: border-box;
+}

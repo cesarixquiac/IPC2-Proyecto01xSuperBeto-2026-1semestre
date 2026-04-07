@@ -49,4 +49,26 @@ public class ProveedorDAO {
         }
         return -1; // Retorna -1 si no existe
     }
+    
+    public java.util.List<com.google.gson.JsonObject> listarProveedores() {
+        java.util.List<com.google.gson.JsonObject> lista = new java.util.ArrayList<>();
+        String sql = "SELECT id_proveedor, nombre, tipo FROM Proveedor";
+        
+        try (java.sql.Connection conn = ConexionDB.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+                json.addProperty("id_proveedor", rs.getInt("id_proveedor"));
+                json.addProperty("nombre", rs.getString("nombre"));
+                json.addProperty("tipo", rs.getInt("tipo"));
+                lista.add(json);
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error al listar proveedores: " + e.getMessage());
+        }
+        return lista;
+    }
+    
 }

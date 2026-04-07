@@ -1,0 +1,142 @@
+<div class="agente-container">
+
+    <div class="header">
+        <h2>👋 Bienvenido, Agente</h2>
+        <p>Área de Atención al Cliente. Inicie una reservación buscando el
+            DPI.</p>
+    </div>
+
+    <button class="btn-caja-nav" routerLink="/agente/caja-pagos">
+        💰 Ir a Caja y Pagos
+    </button>
+
+    <div class="search-card">
+        <h3>🔍 Buscar Cliente (DPI / Pasaporte)</h3>
+        <div class="search-bar">
+            <input type="text" [(ngModel)]="dpiBuscado"
+                (keyup.enter)="buscarDPI()" placeholder="Ej. 1234567890101"
+                class="form-control dpi-input">
+            <button class="btn-search" (click)="buscarDPI()">Buscar</button>
+            <button class="btn-clear" (click)="limpiarBusqueda()"
+                *ngIf="busquedaRealizada">Limpiar</button>
+        </div>
+    </div>
+
+    <div class="result-card found"
+        *ngIf="busquedaRealizada && clienteEncontrado">
+        <div class="success-badge">✅ Cliente Registrado</div>
+        <h3>{{ clienteEncontrado.nombre_completo }}</h3>
+
+        <div class="info-grid">
+            <div class="info-item"><strong>DPI:</strong> {{
+                clienteEncontrado.dpi }}</div>
+            <div class="info-item"><strong>Nacionalidad:</strong> {{
+                clienteEncontrado.nacionalidad }}</div>
+            <div class="info-item"><strong>Teléfono:</strong> {{
+                clienteEncontrado.telefono }}</div>
+            <div class="info-item"><strong>Email:</strong> {{
+                clienteEncontrado.email }}</div>
+        </div>
+
+        <div class="actions-footer"
+            style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="btn-secondary" (click)="abrirHistorial()">📜 Ver
+                Historial de Viajes</button>
+            <button class="btn-primary"
+                [routerLink]="['/agente/crear-reservacion', clienteEncontrado.dpi]">
+                ✈️ Iniciar Reservación para este Cliente
+            </button>
+        </div>
+    </div> <div class="result-card not-found"
+        *ngIf="busquedaRealizada && !clienteEncontrado">
+        <div class="warning-badge">⚠️ Cliente Nuevo</div>
+        <p>El DPI <strong>{{ dpiBuscado }}</strong> no existe en el sistema.
+            Regístrelo para continuar.</p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>DPI / Pasaporte *</label>
+                <input type="text" [(ngModel)]="nuevoCliente.dpi"
+                    class="form-control" disabled>
+            </div>
+            <div class="form-group">
+                <label>Nombre Completo *</label>
+                <input type="text" [(ngModel)]="nuevoCliente.nombre_completo"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento *</label>
+                <input type="date" [(ngModel)]="nuevoCliente.fecha_nacimiento"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Nacionalidad *</label>
+                <input type="text" [(ngModel)]="nuevoCliente.nacionalidad"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Teléfono *</label>
+                <input type="text" [(ngModel)]="nuevoCliente.telefono"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico *</label>
+                <input type="email" [(ngModel)]="nuevoCliente.email"
+                    class="form-control">
+            </div>
+        </div>
+
+        <div class="actions-footer">
+            <button class="btn-success" (click)="registrarCliente()">💾 Guardar
+                y Continuar</button>
+        </div>
+    </div> <div class="modal-overlay" *ngIf="mostrarModalHistorial">
+        <div class="modal-content" style="max-width: 800px;">
+
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #2c3e50;">📜 Historial de: {{
+                    clienteEncontrado?.nombre_completo }}</h3>
+                <button class="btn-close" (click)="cerrarHistorial()"
+                    style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>
+            </div>
+
+            <div *ngIf="historialReservaciones.length === 0"
+                style="text-align: center; padding: 20px; color: #7f8c8d; font-style: italic;">
+                Este cliente no tiene reservaciones previas en el sistema.
+            </div>
+
+            <table class="table" *ngIf="historialReservaciones.length > 0"
+                style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background-color: #34495e; color: white;">
+                        <th style="padding: 10px;">Código</th>
+                        <th style="padding: 10px;">Paquete Turístico</th>
+                        <th style="padding: 10px;">Fecha de Viaje</th>
+                        <th style="padding: 10px;">Total (Q)</th>
+                        <th style="padding: 10px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let res of historialReservaciones"
+                        style="border-bottom: 1px solid #ecf0f1;">
+                        <td style="padding: 10px; font-weight: bold;">{{
+                            res.codigo_reserva }}</td>
+                        <td style="padding: 10px;">{{ res.paquete_nombre }}</td>
+                        <td style="padding: 10px;">{{ res.fecha_viaje }}</td>
+                        <td style="padding: 10px;">Q{{ res.costo_total |
+                            number:'1.2-2' }}</td>
+                        <td style="padding: 10px;">
+                            <span
+                                [ngStyle]="{'color': res.estado === 'Confirmada' ? '#27ae60' : (res.estado === 'Cancelada' ? '#e74c3c' : '#f39c12'), 'font-weight': 'bold'}">
+                                {{ res.estado }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
