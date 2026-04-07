@@ -36,4 +36,8 @@ export class Agente {
   registrarPago(pago: any): Observable<any> {
     return this.http.post<any>('http://localhost:8080/IPC2-Proyecto01xSuperBeto-2026-1semestre-AgenciaViajes/api/pagos', pago);
   }
+
+  cancelarViaje(datos: any): Observable<any> {
+    return this.http.post<any>('http://localhost:8080/IPC2-Proyecto01xSuperBeto-2026-1semestre-AgenciaViajes/api/reembolsos', datos);
+  }
 }

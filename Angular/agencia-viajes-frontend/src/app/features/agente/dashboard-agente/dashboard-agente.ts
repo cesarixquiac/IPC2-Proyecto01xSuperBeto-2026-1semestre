@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';   
 import { RouterLink } from '@angular/router';
 import { Agente } from '../../../core/services/agente';
 
@@ -90,6 +90,32 @@ export class DashboardAgente {
 
   cerrarHistorial() {
     this.mostrarModalHistorial = false;
+  }
+
+  cancelarReserva(reserva: any) {
+    const confirmacion = confirm(`¿Estás seguro de que deseas cancelar el viaje ${reserva.codigo_reserva}?\n\nSe aplicarán las penalizaciones correspondientes según los días de anticipación.`);
+    
+    if (confirmacion) {
+      const payload = {
+        id_reservacion: reserva.id_reservacion,
+        fecha_viaje: reserva.fecha_viaje
+      };
+
+      this.agenteService.cancelarViaje(payload).subscribe({
+        next: (res) => {
+          if (res.success) {
+            
+            alert(` CANCELACIÓN PROCESADA\n\n` +
+                  `Días de anticipación: ${res.dias_anticipacion} días\n` +
+                  `Penalización aplicada, se devuelve el: ${res.porcentaje_aplicado}%\n` +
+                  `Monto a entregar al cliente: Q${res.monto_devuelto.toFixed(2)}`);
+            
+            this.abrirHistorial(); 
+          }
+        },
+        error: () => alert('Error de conexión al procesar la cancelación.')
+      });
+    }
   }
 
   

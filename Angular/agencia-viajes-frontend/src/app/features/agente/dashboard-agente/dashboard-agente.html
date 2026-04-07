@@ -131,6 +131,12 @@
                                 [ngStyle]="{'color': res.estado === 'Confirmada' ? '#27ae60' : (res.estado === 'Cancelada' ? '#e74c3c' : '#f39c12'), 'font-weight': 'bold'}">
                                 {{ res.estado }}
                             </span>
+
+                            <button *ngIf="res.estado !== 'Cancelada'"
+                                (click)="cancelarReserva(res)"
+                                style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;">
+                                Cancelar Viaje
+                            </button>
                         </td>
                     </tr>
                 </tbody>

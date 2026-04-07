@@ -77,7 +77,7 @@ public class ReservacionDAO {
     public java.util.List<com.google.gson.JsonObject> obtenerHistorialPorDPI(String dpi) {
         java.util.List<com.google.gson.JsonObject> historial = new java.util.ArrayList<>();
         
-        String sql = "SELECT r.codigo_reserva, p.nombre AS paquete_nombre, r.fecha_viaje, r.costo_total, r.estado " +
+        String sql = "SELECT r.id_reservacion, r.codigo_reserva, p.nombre AS paquete_nombre, r.fecha_viaje, r.costo_total, r.estado " +
                      "FROM reservacion r " +
                      "JOIN pasajero_reservacion pr ON r.id_reservacion = pr.id_reservacion " +
                      "JOIN paquete p ON r.id_paquete = p.id_paquete " +
@@ -92,6 +92,7 @@ public class ReservacionDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+                    json.addProperty("id_reservacion", rs.getInt("id_reservacion"));
                     json.addProperty("codigo_reserva", rs.getString("codigo_reserva"));
                     json.addProperty("paquete_nombre", rs.getString("paquete_nombre"));
                     json.addProperty("fecha_viaje", rs.getString("fecha_viaje"));
