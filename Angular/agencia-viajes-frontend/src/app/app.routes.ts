@@ -13,7 +13,7 @@ import { CrearReservacion } from './features/agente/crear-reservacion/crear-rese
 import { CajaPagos } from './features/agente/caja-pagos/caja-pagos';
 import { GestionDestinos } from './features/operaciones/gestion-destinos/gestion-destinos';
 import { GestionProveedores } from './features/operaciones/gestion-proveedores/gestion-proveedores';
-
+import { Reportes } from './features/admin/reportes/reportes';
 
 export const routes: Routes = [
   {
@@ -87,9 +87,13 @@ export const routes: Routes = [
         component: GestionPaquetesOperaciones,
         canActivate: [authGuard],
         data: { expectedRole: 2 }
+      },
+      {
+        path: 'admin/reportes',
+        component: Reportes,
+        canActivate: [authGuard],
+        data: { expectedRole: 3 }
       }
-
-
 
     ]
   }

@@ -2,10 +2,10 @@
   
   <div class="header-actions">
     <div class="header-titles">
-      <h2>📦 Crear Nuevo Paquete Turístico</h2>
+      <h2> Crear Nuevo Paquete Turístico</h2>
       <p>Configure los detalles del paquete y agregue los servicios incluidos (vuelos, hoteles, etc.).</p>
     </div>
-    <button routerLink="/admin" class="btn-back">⬅️ Volver al Panel</button>
+    <button routerLink="/admin" class="btn-back"> Volver al Panel</button>
   </div>
 
   <div class="form-card">
@@ -47,7 +47,7 @@
   <div class="form-card">
     <div class="services-header">
       <h3>2. Servicios Incluidos</h3>
-      <button class="btn-add-service" (click)="agregarServicio()">➕ Agregar Servicio</button>
+      <button class="btn-add-service" (click)="agregarServicio()"> Agregar Servicio</button>
     </div>
 
     <div class="service-row" *ngFor="let servicio of paquete.servicios; let i = index">
@@ -86,7 +86,7 @@
   </div>
 
   <div class="footer-actions">
-    <button class="btn-save-package" (click)="guardarPaquete()">💾 Guardar Paquete Completo</button>
+    <button class="btn-save-package" (click)="guardarPaquete()"> Guardar Paquete Completo</button>
   </div>
 
 </div>

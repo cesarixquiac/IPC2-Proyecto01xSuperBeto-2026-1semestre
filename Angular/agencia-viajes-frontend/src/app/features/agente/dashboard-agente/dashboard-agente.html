@@ -1,17 +1,17 @@
 <div class="agente-container">
 
     <div class="header">
-        <h2>👋 Bienvenido, Agente</h2>
+        <h2> Bienvenido, Agente</h2>
         <p>Área de Atención al Cliente. Inicie una reservación buscando el
             DPI.</p>
     </div>
 
     <button class="btn-caja-nav" routerLink="/agente/caja-pagos">
-        💰 Ir a Caja y Pagos
+         Ir a Caja y Pagos
     </button>
 
     <div class="search-card">
-        <h3>🔍 Buscar Cliente (DPI / Pasaporte)</h3>
+        <h3> Buscar Cliente (DPI / Pasaporte)</h3>
         <div class="search-bar">
             <input type="text" [(ngModel)]="dpiBuscado"
                 (keyup.enter)="buscarDPI()" placeholder="Ej. 1234567890101"
@@ -24,7 +24,7 @@
 
     <div class="result-card found"
         *ngIf="busquedaRealizada && clienteEncontrado">
-        <div class="success-badge">✅ Cliente Registrado</div>
+        <div class="success-badge"> Cliente Registrado</div>
         <h3>{{ clienteEncontrado.nombre_completo }}</h3>
 
         <div class="info-grid">
@@ -40,16 +40,16 @@
 
         <div class="actions-footer"
             style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button class="btn-secondary" (click)="abrirHistorial()">📜 Ver
+            <button class="btn-secondary" (click)="abrirHistorial()">Ver
                 Historial de Viajes</button>
             <button class="btn-primary"
                 [routerLink]="['/agente/crear-reservacion', clienteEncontrado.dpi]">
-                ✈️ Iniciar Reservación para este Cliente
+                 Iniciar Reservación para este Cliente
             </button>
         </div>
     </div> <div class="result-card not-found"
         *ngIf="busquedaRealizada && !clienteEncontrado">
-        <div class="warning-badge">⚠️ Cliente Nuevo</div>
+        <div class="warning-badge"> Cliente Nuevo</div>
         <p>El DPI <strong>{{ dpiBuscado }}</strong> no existe en el sistema.
             Regístrelo para continuar.</p>
 
@@ -95,7 +95,7 @@
 
             <div class="modal-header"
                 style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #2c3e50;">📜 Historial de: {{
+                <h3 style="margin: 0; color: #2c3e50;">Historial de: {{
                     clienteEncontrado?.nombre_completo }}</h3>
                 <button class="btn-close" (click)="cerrarHistorial()"
                     style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>

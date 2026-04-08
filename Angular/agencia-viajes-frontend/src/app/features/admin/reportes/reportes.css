@@ -1,0 +1,39 @@
+.admin-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+/* Filtros */
+.filtros-box { display: flex; gap: 20px; background: #ecf0f1; padding: 15px; border-radius: 8px; margin-bottom: 25px; align-items: center;}
+.form-group { display: flex; flex-direction: column; }
+.form-control { padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; }
+
+/* Tarjetas */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+.report-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent;}
+.report-card:hover { transform: translateY(-5px); border-color: #3498db; }
+.report-card .icon { font-size: 35px; margin-bottom: 10px; }
+.report-card h3 { margin: 0; font-size: 16px; color: #2c3e50; }
+
+/* Tabla e Impresión */
+.print-header { text-align: center; margin-bottom: 20px; }
+.print-header h2 { margin: 0; color: #2c3e50; }
+.print-header h3 { color: #3498db; }
+.btn-print { background-color: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+
+.styled-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+.styled-table th, .styled-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+.styled-table th { background-color: #34495e; color: white; }
+
+
+@media print {
+  /* Ocultamos menú lateral, tarjetas, botones y filtros */
+  .no-print { display: none !important; }
+  
+  /* Ajustamos la tabla para el papel */
+  body { background: white; margin: 0; padding: 0; }
+  .admin-container { padding: 0; max-width: 100%; }
+  .printable-area { width: 100%; }
+  .styled-table th { background-color: #eeeeee !important; color: black !important; -webkit-print-color-adjust: exact; }
+  .styled-table { border: 1px solid black; }
+
+  tr { page-break-inside: avoid; }
+}

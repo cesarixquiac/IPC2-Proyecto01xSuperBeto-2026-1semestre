@@ -30,4 +30,10 @@ export class Admin {
   crearUsuario(usuario: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, usuario);
   }
+
+  obtenerReporte(tipo: string, inicio: string, fin: string) {
+    const baseUrl = 'http://localhost:8080/IPC2-Proyecto01xSuperBeto-2026-1semestre-AgenciaViajes/api';
+    
+    return this.http.get<any[]>(`${baseUrl}/reportes?tipo=${tipo}&inicio=${inicio}&fin=${fin}`);
+  }
 }

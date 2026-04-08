@@ -1,0 +1,86 @@
+<div class="admin-container">
+  
+  <div class="header-actions no-print">
+    <div class="header-titles">
+      <h2> Dashboard Financiero y Reportes</h2>
+      <p>Seleccione el intervalo de tiempo y el tipo de reporte que desea analizar.</p>
+    </div>
+    <button routerLink="/admin" class="btn-back">Volver al Panel</button>
+  </div>
+
+  <div class="filtros-box no-print">
+    <div class="form-group">
+      <label>Fecha de Inicio:</label>
+      <input type="date" [(ngModel)]="fechaInicio" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Fecha de Fin:</label>
+      <input type="date" [(ngModel)]="fechaFin" class="form-control">
+    </div>
+  </div>
+
+  <div class="cards-grid no-print">
+    <div class="report-card" (click)="generarReporte('ventas', 'Reporte de Ventas Confirmadas')">
+      <div class="icon">💰</div> <h3>Ventas</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('cancelaciones', 'Reporte de Cancelaciones y Reembolsos')">
+      <div class="icon">🚫</div> <h3>Cancelaciones</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('ganancias', 'Balance General de Ganancias')">
+      <div class="icon">📈</div> <h3>Ganancias Netas</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('top-agente-ventas', 'Top Agente (Por Volumen de Ventas)')">
+      <div class="icon">🥇</div> <h3>Top Agente (Ventas)</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('top-agente-ganancias', 'Top Agente (Por Ganancia Generada)')">
+      <div class="icon">💎</div> <h3>Top Agente (Ganancia)</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('paquete-mas-vendido', 'Paquete Turístico Más Vendido')">
+      <div class="icon">🔥</div> <h3>Paquete Estrella</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('paquete-menos-vendido', 'Paquete Turístico Menos Vendido')">
+      <div class="icon">🧊</div> <h3>Paquete Crítico</h3>
+    </div>
+    <div class="report-card" (click)="generarReporte('ocupacion', 'Ocupación por Destino Turístico')">
+      <div class="icon">🗺️</div> <h3>Ocupación Destinos</h3>
+    </div>
+  </div>
+
+  <hr class="no-print" style="margin: 30px 0;">
+
+  <div class="printable-area" *ngIf="tituloReporte">
+    
+    <div class="print-header">
+      <h2>Agencia de Viajes - Área Financiera</h2>
+      <h3>{{ tituloReporte }}</h3>
+      <p>Periodo analizado: <strong>{{ fechaInicio }}</strong> al <strong>{{ fechaFin }}</strong></p>
+      <button class="btn-print no-print" (click)="imprimirPDF()">🖨️ Exportar a PDF / Imprimir</button>
+    </div>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columnas">{{ formatearColumna(col) }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fila of resultados">
+          <td *ngFor="let col of columnas">
+            <ng-container *ngIf="col.includes('monto') || col.includes('ganancia') || col.includes('ingresos') || col.includes('reembolsado') || col.includes('retenido'); else normalText">
+              Q.{{ fila[col] | number:'1.2-2' }}
+            </ng-container>
+            <ng-template #normalText>
+              {{ fila[col] }}
+            </ng-template>
+          </td>
+        </tr>
+        <tr *ngIf="resultados.length === 0">
+          <td [colSpan]="columnas.length || 1" style="text-align: center; padding: 20px;">
+            No se encontraron registros en este intervalo de tiempo.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
