@@ -5,11 +5,15 @@
 package com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.dao;
 
 
+import com.google.gson.JsonObject;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.db.ConexionDB;
 import com.mycompany.ipc2.proyecto01xsuperbeto.semestre.agenciaviajes.models.Proveedor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProveedorDAO {
 
@@ -69,6 +73,46 @@ public class ProveedorDAO {
             System.err.println("Error al listar proveedores: " + e.getMessage());
         }
         return lista;
+    }
+    
+    
+    public List<JsonObject> obtenerProveedores() {
+        List<JsonObject> lista = new ArrayList<>();
+        String sql = "SELECT * FROM proveedor";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                JsonObject j = new JsonObject();
+                j.addProperty("id_proveedor", rs.getInt("id_proveedor"));
+                j.addProperty("nombre", rs.getString("nombre"));
+                j.addProperty("tipo", rs.getInt("tipo"));
+                j.addProperty("pais", rs.getString("pais"));
+                j.addProperty("contacto", rs.getString("contacto") != null ? rs.getString("contacto") : ""); 
+                lista.add(j);
+            }
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        }
+        return lista;
+    }
+
+    public boolean crearProveedor(String nombre, int tipo, String pais, String contacto) {
+        String sql = "INSERT INTO proveedor (nombre, tipo, pais, contacto) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, nombre);
+            pstmt.setInt(2, tipo);
+            pstmt.setString(3, pais);
+            pstmt.setString(4, contacto);
+            
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) { 
+            System.err.println(" ERROR SQL AL CREAR PROVEEDOR: " + e.getMessage());
+            return false; 
+        }
     }
     
 }

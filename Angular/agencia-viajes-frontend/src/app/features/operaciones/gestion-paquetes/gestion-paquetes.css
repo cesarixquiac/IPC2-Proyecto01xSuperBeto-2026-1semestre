@@ -1,0 +1,83 @@
+/* Heredamos estilos generales */
+.operaciones-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px;}
+.header-titles h2 { margin: 0; color: #2c3e50; font-size: 26px;}
+.header-titles p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 16px;}
+
+/* Botones */
+.btn-primary { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-primary:hover { background-color: #2980b9; transform: translateY(-2px); }
+.btn-cancel { background-color: #95a5a6; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; }
+.btn-success { background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-delete { background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+
+/* Tabla Principal */
+.table-container { background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+.styled-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.styled-table thead tr { background-color: #34495e; color: #ffffff; text-align: left; }
+.styled-table th, .styled-table td { padding: 12px 15px; border-bottom: 1px solid #dddddd; }
+.styled-table tbody tr:hover { background-color: #f8f9fa; }
+
+/* Etiquetas de Estado */
+.badge { background-color: #95a5a6; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: white;}
+.badge-active { background-color: #27ae60; }
+
+/* Modal Gigante de 2 Columnas */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; animation: fadeIn 0.3s;}
+.modal-lg { width: 950px; max-width: 95vw; max-height: 90vh; }
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; color: #2c3e50; font-size: 22px; }
+.btn-close { background: none; border: none; font-size: 20px; cursor: pointer; }
+
+/* Division en 2 paneles (Grid) */
+.modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; overflow-y: auto; padding-right: 10px; }
+.panel-general h4, .panel-servicios h4 { border-bottom: 2px solid #3498db; padding-bottom: 5px; color: #2c3e50; margin-top: 0; }
+
+/* Formularios */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full-width { grid-column: span 2; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 13px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
+.form-control { padding: 8px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 14px; font-family: inherit;}
+
+/* Caja de agregar servicio */
+.add-service-box { background: #fdfdfd; padding: 15px; border-radius: 8px; border: 2px dashed #bdc3c7; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+
+/* Tabla interna de la canasta */
+.mini-table th, .mini-table td { padding: 8px; font-size: 13px; }
+
+/* Calculadora financiera */
+.resumen-financiero { margin-top: 20px; background: #f4f6f7; padding: 15px; border-radius: 8px; text-align: right; border-left: 5px solid #34495e; }
+.resumen-financiero p { margin: 5px 0; font-size: 14px; color: #2c3e50;}
+.profit-positive { color: #27ae60; }
+.profit-negative { color: #e74c3c; font-weight: bold; }
+
+.modal-footer { margin-top: 20px; padding-top: 15px; border-top: 2px solid #ecf0f1; display: flex; justify-content: flex-end; gap: 10px; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+.alerta-demanda {
+  background: #f1c40f;
+  border-radius: 50%;
+  padding: 2px 5px;
+  margin-left: 5px;
+  cursor: help;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.btn-info {
+  background-color: #16a085;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}

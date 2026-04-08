@@ -1,0 +1,33 @@
+
+.operaciones-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px;}
+.header-titles h2 { margin: 0; color: #2c3e50; font-size: 26px;}
+.header-titles p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 16px;}
+
+.btn-primary { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-primary:hover { background-color: #2980b9; transform: translateY(-2px); }
+
+
+.table-container { background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+.styled-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.styled-table thead tr { background-color: #34495e; color: #ffffff; text-align: left; }
+.styled-table th, .styled-table td { padding: 15px 20px; border-bottom: 1px solid #dddddd; }
+.styled-table tbody tr:hover { background-color: #f8f9fa; }
+.badge { background-color: #ecf0f1; padding: 5px 10px; border-radius: 20px; font-size: 13px; font-weight: bold; color: #2c3e50;}
+
+
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; width: 600px; max-width: 90%; border-radius: 10px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; color: #2c3e50; }
+.btn-close { background: none; border: none; font-size: 20px; cursor: pointer; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full-width { grid-column: span 2; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 13px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
+.form-control { padding: 10px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 14px; }
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 2px solid #ecf0f1; }
+.btn-cancel { background-color: #95a5a6; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; }
+.btn-success { background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }

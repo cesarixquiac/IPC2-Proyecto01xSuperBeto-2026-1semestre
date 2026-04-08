@@ -1,0 +1,40 @@
+.operaciones-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px;}
+.header-titles h2 { margin: 0; color: #2c3e50; font-size: 26px;}
+.header-titles p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 16px;}
+
+.btn-primary { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-primary:hover { background-color: #2980b9; transform: translateY(-2px); }
+
+/* --- GRID DE TARJETAS --- */
+.destinos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.destino-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s; }
+.destino-card:hover { transform: translateY(-5px); }
+
+.img-container { height: 180px; background-size: cover; background-position: center; background-color: #bdc3c7; position: relative; }
+.badge-pais { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+
+.card-body { padding: 15px; }
+.card-body h3 { margin: 0 0 10px 0; color: #2c3e50; font-size: 20px; }
+.desc { color: #555; font-size: 14px; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.clima-info { font-size: 13px; color: #e67e22; background: #fdf2e9; padding: 8px; border-radius: 4px; }
+
+/* --- MODAL --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; width: 600px; max-width: 90%; border-radius: 10px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease-out; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; color: #2c3e50; }
+.btn-close { background: none; border: none; font-size: 20px; cursor: pointer; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full-width { grid-column: span 2; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 13px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
+.form-control { padding: 10px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 14px; font-family: inherit;}
+.help-text { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 2px solid #ecf0f1; }
+.btn-cancel { background-color: #95a5a6; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; }
+.btn-success { background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }

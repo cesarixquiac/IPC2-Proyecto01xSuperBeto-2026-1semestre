@@ -1,0 +1,224 @@
+<div class="operaciones-container">
+
+    <div class="header-actions">
+        <div class="header-titles">
+            <h2>🧳 Catálogo de Paquetes Turísticos</h2>
+            <p>Ensamblaje de viajes combinando destinos y proveedores.</p>
+        </div>
+        <div>
+            <button class="btn-cancel" routerLink="/operaciones"
+                style="margin-right: 10px;"> Volver al Panel</button>
+            <button class="btn-primary" (click)="abrirModal()"> Ensamblar Nuevo
+                Paquete</button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre del Paquete</th>
+                    <th>Destino Principal</th>
+                    <th>Duración</th>
+                    <th>Precio de Venta</th>
+                    <th>Capacidad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th> </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let paq of paquetes">
+                    <td>
+                        <strong>#{{ paq.id_paquete }}</strong>
+                        <span *ngIf="paq.capacidad_max <= 5"
+                            class="alerta-demanda"
+                            title="Alta demanda en reservaciones">🔥</span>
+                    </td>
+                    <td>{{ paq.nombre }}</td>
+                    <td>{{ paq.nombre_destino }}</td>
+                    <td>{{ paq.duracion_dias }} días</td>
+                    <td>Q.{{ paq.precio_venta | number:'1.2-2' }}</td>
+                    <td>{{ paq.capacidad_max }}p max</td>
+                    <td>
+                        <span class="badge"
+                            [ngClass]="{'badge-active': paq.estado === 1}">
+                            {{ paq.estado === 1 ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-info"
+                            (click)="prepararEdicion(paq)"> Detalles</button>
+                    </td>
+                </tr>
+                <tr *ngIf="paquetes.length === 0">
+                    <td colspan="8"
+                        style="text-align: center; padding: 20px;">No hay
+                        paquetes configurados aún.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-overlay" *ngIf="mostrarModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>🧳 Ensamblar Paquete Turístico</h3>
+                <button class="btn-close" (click)="cerrarModal()">❌</button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="panel-general">
+                    <h4>1. Datos Generales del Viaje</h4>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Nombre del Paquete *</label>
+                            <input type="text" [(ngModel)]="nuevoPaquete.nombre"
+                                class="form-control"
+                                placeholder="Ej. Europa Express 10 días">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Destino *</label>
+                            <select [(ngModel)]="nuevoPaquete.id_destino"
+                                class="form-control">
+                                <option [ngValue]="null" disabled>Seleccione un
+                                    destino...</option>
+                                <option *ngFor="let dest of destinos"
+                                    [ngValue]="dest.id_destino">{{ dest.nombre
+                                    }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Duración (Días) *</label>
+                            <input type="number"
+                                [(ngModel)]="nuevoPaquete.duracion_dias"
+                                class="form-control" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Capacidad Máxima (Pax) *</label>
+                            <input type="number"
+                                [(ngModel)]="nuevoPaquete.capacidad_max"
+                                class="form-control" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Precio Venta Público (Q.) *</label>
+                            <input type="number"
+                                [(ngModel)]="nuevoPaquete.precio_venta"
+                                class="form-control" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+              <label>Estado del Paquete *</label>
+              <select [(ngModel)]="nuevoPaquete.estado" class="form-control">
+                <option [ngValue]="1">Activo</option>
+                <option [ngValue]="0">Inactivo</option>
+              </select>
+            </div>
+
+                        <div class="form-group full-width">
+                            <label>Descripción General</label>
+                            <textarea [(ngModel)]="nuevoPaquete.descripcion"
+                                class="form-control" rows="2"
+                                placeholder="Detalles atractivos del viaje..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-servicios">
+                    <h4>2. Servicios del Proveedor (Costos)</h4>
+
+                    <div class="add-service-box">
+                        <div class="form-group full-width">
+                            <label>Proveedor</label>
+                            <select [(ngModel)]="servicioTemp.id_proveedor"
+                                class="form-control">
+                                <option [ngValue]="null" disabled>Elegir empresa
+                                    aliada...</option>
+                                <option *ngFor="let prov of proveedores"
+                                    [ngValue]="prov.id_proveedor">{{ prov.nombre
+                                    }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción servicio</label>
+                            <input type="text"
+                                [(ngModel)]="servicioTemp.descripcion"
+                                class="form-control"
+                                placeholder="Ej. Vuelo redondo">
+                        </div>
+                        <div class="form-group">
+                            <label>Costo Agencia (Q.)</label>
+                            <input type="number"
+                                [(ngModel)]="servicioTemp.costo_agencia"
+                                class="form-control" min="0">
+                        </div>
+                        <div class="form-group full-width"
+                            style="align-items: flex-end;">
+                            <button class="btn-primary"
+                                style="padding: 6px 12px; font-size: 13px;"
+                                (click)="agregarServicio()"> Añadir a la
+                                lista</button>
+                        </div>
+                    </div>
+
+                    <table class="styled-table mini-table">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Costo (Q.)</th>
+                                <th>X</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let srv of serviciosAgregados; let i = index">
+                                <td><strong>{{ srv.nombre_proveedor
+                                        }}</strong><br><small>{{ srv.descripcion
+                                        }}</small></td>
+                                <td>{{ srv.costo_agencia | number:'1.2-2'
+                                    }}</td>
+                                <td><button class="btn-delete"
+                                        (click)="quitarServicio(i)">🗑️</button></td>
+                            </tr>
+                            <tr *ngIf="serviciosAgregados.length === 0">
+                                <td colspan="3"
+                                    style="text-align: center; color: #7f8c8d;">Canasta
+                                    vacía. Añada los servicios arriba.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="resumen-financiero"
+                        *ngIf="serviciosAgregados.length > 0">
+                        <p>Total Costo Proveedores: <strong>Q.{{
+                                costoTotalAgencia | number:'1.2-2'
+                                }}</strong></p>
+                        <p>Precio de Venta (Ingreso): <strong>Q.{{
+                                nuevoPaquete.precio_venta | number:'1.2-2'
+                                }}</strong></p>
+                        <hr
+                            style="border: 0; border-top: 1px solid #bdc3c7; margin: 5px 0;">
+                        <h3 style="margin: 5px 0;"
+                            [ngClass]="{'profit-positive': gananciaBruta > 0, 'profit-negative': gananciaBruta <= 0}">
+                            Ganancia Bruta: Q.{{ gananciaBruta | number:'1.2-2'
+                            }}
+                        </h3>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel"
+                    (click)="cerrarModal()">Cancelar</button>
+                <button class="btn-success" (click)="guardarPaquete()">Guardar
+                    Paquete Completo</button>
+            </div>
+        </div>
+    </div>
+
+</div>

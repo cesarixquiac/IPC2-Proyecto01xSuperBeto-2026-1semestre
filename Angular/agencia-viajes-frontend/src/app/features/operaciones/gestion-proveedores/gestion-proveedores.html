@@ -1,0 +1,82 @@
+<div class="operaciones-container">
+  
+  <div class="header-actions">
+    <div class="header-titles">
+      <h2> Directorio de Proveedores</h2>
+      <p>Gestione las empresas externas que suministran servicios para los paquetes.</p>
+    </div>
+    <div>
+      <button class="btn-cancel" routerLink="/operaciones" style="margin-right: 10px;"> Volver</button>
+      <button class="btn-primary" (click)="abrirModal()"> Registrar Proveedor</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre del Proveedor</th>
+          <th>Tipo de Servicio</th>
+          <th>País Base</th>
+          <th>Datos de Contacto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prov of proveedores">
+          <td><strong>#{{ prov.id_proveedor }}</strong></td>
+          <td>{{ prov.nombre }}</td>
+          <td><span class="badge">{{ obtenerNombreTipo(prov.tipo) }}</span></td>
+          <td>{{ prov.pais }}</td>
+          <td>{{ prov.contacto || 'No registrado' }}</td>
+        </tr>
+        <tr *ngIf="proveedores.length === 0">
+          <td colspan="5" style="text-align: center; padding: 20px;">No hay proveedores registrados aún.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3> Registrar Proveedor</h3>
+        <button class="btn-close" (click)="cerrarModal()">❌</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Nombre del Proveedor *</label>
+          <input type="text" [(ngModel)]="nuevoProveedor.nombre" class="form-control" placeholder="Ej. Avianca, Hotel Barceló...">
+        </div>
+        
+        <div class="form-group">
+          <label>Tipo de Servicio *</label>
+          <select [(ngModel)]="nuevoProveedor.tipo" class="form-control">
+            <option [ngValue]="1"> Aerolínea</option>
+            <option [ngValue]="2"> Hotel</option>
+            <option [ngValue]="3"> Tour Operador</option>
+            <option [ngValue]="4"> Traslado/Transporte</option>
+            <option [ngValue]="5"> Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>País de Operación *</label>
+          <input type="text" [(ngModel)]="nuevoProveedor.pais" class="form-control" placeholder="Ej. Colombia">
+        </div>
+
+        <div class="form-group full-width">
+          <label>Datos de Contacto</label>
+          <input type="text" [(ngModel)]="nuevoProveedor.contacto" class="form-control" placeholder="Teléfono, email o web...">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-success" (click)="guardarProveedor()"> Guardar</button>
+      </div>
+    </div>
+  </div>
+
+</div>

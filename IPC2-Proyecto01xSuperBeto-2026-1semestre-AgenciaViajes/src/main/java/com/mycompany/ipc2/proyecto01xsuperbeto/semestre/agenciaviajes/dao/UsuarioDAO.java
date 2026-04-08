@@ -125,7 +125,7 @@ public boolean actualizarUsuario(String username, int idRol, String estado) {
             
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) { 
-            System.err.println("❌ ERROR SQL al actualizar usuario: " + e.getMessage());
+            System.err.println(" ERROR SQL al actualizar usuario: " + e.getMessage());
             return false; 
         }
     }
